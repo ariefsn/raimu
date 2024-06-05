@@ -5,10 +5,12 @@ from fastapi.responses import JSONResponse
 from app.entities.base import CamelCaseModel
 
 
-def json_ok(data: CamelCaseModel | List[CamelCaseModel], code: int = 200)-> JSONResponse:
+def json_ok(data: CamelCaseModel | List[CamelCaseModel] | str, code: int = 200)-> JSONResponse:
   d = data
   if (isinstance(data, CamelCaseModel)):
     d = data.model_dump(by_alias=True)
+  elif (isinstance(data, str)):
+    d = data
   else:
     def map_data(each: CamelCaseModel):
       return each.model_dump(by_alias=True)
