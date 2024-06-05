@@ -1,0 +1,8 @@
+services:
+  raimu:
+    container_name: "raimu"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
