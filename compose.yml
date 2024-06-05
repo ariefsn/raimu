@@ -6,3 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:80"
+    volumes:
+      - "./volumes/deepface:/root/.deepface"
+      - "./volumes/keras:/root/.keras"
+    restart: always
