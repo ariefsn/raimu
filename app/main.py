@@ -12,7 +12,7 @@ from app.entities.response import HttpResponse
 from app.helper.mapper import Mapper
 from app.helper.mask import detect_mask
 from app.helper.response import json_error, json_ok
-from app.helper.utils import isBase64Image, isUrl
+from app.helper.utils import is_base64_image, is_url
 
 app = FastAPI()
 
@@ -22,8 +22,8 @@ def ping():
 
 @app.post('/face-verify', name="Post Face Verify", responses={200: { "model": FaceRecognitionResponseWrapper }, 422: { "model": HttpResponse }})
 def postFaceVerify(payload: FaceRecognitionDto):
-  is_img_source_valid = isBase64Image(payload.img_source) or isUrl(payload.img_source)
-  is_img_target_valid = isBase64Image(payload.img_target) or isUrl(payload.img_target)
+  is_img_source_valid = is_base64_image(payload.img_source) or is_url(payload.img_source)
+  is_img_target_valid = is_base64_image(payload.img_target) or is_url(payload.img_target)
   is_anti_spoofing_enabled = payload.anti_spoofing is True
   is_mask_detection_enabled = payload.mask_detection is True
   is_mask_detected_allowed = [True, None].__contains__(payload.mask_detected_allowed)

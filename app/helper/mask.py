@@ -1,7 +1,4 @@
 import base64
-from os import getcwd, path
-from urllib.request import urlopen
-from uuid import uuid4
 
 import cv2
 import numpy as np
@@ -10,8 +7,12 @@ from keras.api.applications.mobilenet_v2 import preprocess_input
 from keras.api.models import load_model
 from keras.api.preprocessing.image import img_to_array
 
-from app.helper.utils import isBase64Image, isUrl
+from app.helper.utils import asset, is_base64_image, is_url
 
+face_path = asset(['haarcascade_frontalface_default.xml'])
+faceCascade = cv2.CascadeClassifier(face_path)
+model_path = asset(['mask_recog.h5'])
+model = load_model(model_path)
 
 def url_to_cv2_image(url)->MatLike:
   cap = cv2.VideoCapture(url)
@@ -32,15 +33,10 @@ def base64_to_cv2_image(b64)->MatLike:
   return image
 
 def detect_mask(img)->bool:
-  face_path = path.join(getcwd(), 'app', 'assets', 'haarcascade_frontalface_default.xml')
-  faceCascade = cv2.CascadeClassifier(face_path)
-  model_path = path.join(getcwd(), 'app', 'assets', 'mask_recog.h5')
-  model = load_model(model_path)
-
   frame:MatLike = None
-  if isUrl(img):
+  if is_url(img):
     frame = url_to_cv2_image(img)
-  elif isBase64Image(img):
+  elif is_base64_image(img):
     frame = base64_to_cv2_image(img)
   else:
     frame = cv2.imread(img)
@@ -49,18 +45,18 @@ def detect_mask(img)->bool:
   faces = faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(60, 60), flags=cv2.CASCADE_SCALE_IMAGE)
 
   for (x, y, w, h) in faces:
-      face_frame = frame[y:y+h, x:x+w]
-      face_frame = cv2.cvtColor(face_frame, cv2.COLOR_BGR2RGB)
-      face_frame = cv2.resize(face_frame, (224, 224))
-      face_frame = img_to_array(face_frame)
-      face_frame = np.expand_dims(face_frame, axis=0)
-      face_frame = preprocess_input(face_frame)
-      
-      preds = model.predict(face_frame)
-      (mask, withoutMask) = preds[0]
-      is_mask = mask > withoutMask
+    face_frame = frame[y:y+h, x:x+w]
+    face_frame = cv2.cvtColor(face_frame, cv2.COLOR_BGR2RGB)
+    face_frame = cv2.resize(face_frame, (224, 224))
+    face_frame = img_to_array(face_frame)
+    face_frame = np.expand_dims(face_frame, axis=0)
+    face_frame = preprocess_input(face_frame)
+    
+    preds = model.predict(face_frame)
+    (mask, withoutMask) = preds[0]
+    is_mask = mask > withoutMask
 
-      if is_mask:
-         return True
+    if is_mask:
+      return True
 
   return False
