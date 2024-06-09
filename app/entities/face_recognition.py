@@ -7,6 +7,9 @@ from app.entities.response import HttpResponse
 class FaceRecognitionDto(CamelCaseModel):
   img_source: str
   img_target: str
+  anti_spoofing: bool | None = None
+  mask_detection: bool | None = None
+  mask_detected_allowed: bool | None = None
 
 class FaceRecognitionArea(CamelCaseModel):
   x: float
@@ -29,6 +32,7 @@ class FaceRecognitionResponse(CamelCaseModel):
   detector_backend: str
   similarity_metric: str
   time: float
+  masked_faces: List[str]
 
 class FaceRecognitionResponseWrapper(HttpResponse):
   data: FaceRecognitionResponse
