@@ -7,7 +7,7 @@ RUN pip install --upgrade pip
 RUN apt-get update && apt-get install -y pkg-config gcc libhdf5-dev
 
 # For deepface
-RUN apt-get install ffmpeg libsm6 libxext6 -y
+RUN apt-get install ffmpeg libsm6 libxext6 libgl1 -y
 
 WORKDIR /src
 
