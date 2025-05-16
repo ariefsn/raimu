@@ -10,6 +10,7 @@ class FaceRecognitionDto(CamelCaseModel):
   anti_spoofing: bool | None = None
   mask_detection: bool | None = None
   mask_detected_allowed: bool | None = None
+  model: str | None = "Facenet512"
 
 class FaceRecognitionArea(CamelCaseModel):
   x: float
