@@ -4,6 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    runtime: nvidia  # <= untuk Docker versi lama (sampai Compose v2.3)
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+#    device_requests:
+#      - capabilities: ["gpu"]
     ports:
       - "8000:80"
     volumes:

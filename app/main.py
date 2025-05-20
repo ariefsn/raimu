@@ -16,6 +16,11 @@ from app.helper.response import json_error, json_ok
 from app.helper.utils import (is_base64_image, is_url, read_image_from_base64,
                               read_image_from_url)
 
+import tensorflow as tf
+
+print("TensorFlow version:", tf.__version__)
+print("GPU Available:", tf.config.list_physical_devices('GPU'))
+
 app = FastAPI()
 
 @app.middleware("http")

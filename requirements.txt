@@ -1,5 +1,6 @@
 fastapi==0.111.0
 deepface==0.0.93
 tf-keras
+numpy==1.23.5
 # retina-face==0.0.17
 # face_recognition

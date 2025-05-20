@@ -1,0 +1,15 @@
+FROM tensorflow/tensorflow:2.15.0-gpu
+
+RUN apt-get update && apt-get install -y \
+    pkg-config gcc libhdf5-dev \
+    ffmpeg libsm6 libxext6 libgl1 \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+
+RUN pip install --upgrade pip
+RUN pip install --no-binary=h5py h5py
+
+COPY requirements.txt .
+RUN grep -vE "^(tensorflow|tensorflow-gpu|tensorflow-cpu)$" requirements.txt > req.txt
+RUN pip install --no-cache-dir -r req.txt
