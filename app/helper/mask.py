@@ -3,9 +3,9 @@ import base64
 import cv2
 import numpy as np
 from cv2.typing import MatLike
-from keras.api.applications.mobilenet_v2 import preprocess_input
-from keras.api.models import load_model
-from keras.api.preprocessing.image import img_to_array
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array
 
 from app.helper.utils import asset, is_base64_image, is_url
 
