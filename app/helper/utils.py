@@ -1,5 +1,12 @@
+import base64
+from io import BytesIO
 from os import getcwd, path
 from typing import List
+
+import cv2
+import numpy as np
+import requests
+from PIL import Image
 
 
 def cast_type(container, from_types, to_types):
@@ -32,3 +39,18 @@ def is_url(data: str)->bool:
 
 def asset(paths: List[str] = []):
   return path.join(getcwd(), 'app', 'assets', *paths)
+
+def read_image_from_url(url):
+  resp = requests.get(url)
+  resp.raise_for_status()  # biar langsung error kalau 404 / 500
+  img_array = np.frombuffer(resp.content, np.uint8)
+  img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+  if img is None:
+      raise ValueError("Failed to decode image from URL")
+  return img
+
+def read_image_from_base64(base64_str):
+    header, encoded = base64_str.split(",", 1)
+    img_bytes = base64.b64decode(encoded)
+    img = Image.open(BytesIO(img_bytes))
+    return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
